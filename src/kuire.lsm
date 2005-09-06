@@ -1,0 +1,16 @@
+Begin3
+Title:          Kuire -- Some description
+Version:        0.1
+Entered-date:   
+Description:    
+Keywords:       KDE Qt
+Author:         Carsten Nikiel <carsten@nikiel.de>
+Maintained-by:  Carsten Nikiel <carsten@nikiel.de>
+Home-page:      
+Alternate-site: 
+Primary-site:   ftp://ftp.kde.org/pub/kde/unstable/apps/utils
+                xxxxxx  kuire-0.1.tar.gz
+                xxx     kuire-0.1.lsm
+Platform:       Linux. Needs KDE
+Copying-policy: GPL
+End
