@@ -1,0 +1,238 @@
+/****************************************************************************
+** KuirePreferences meta object code from reading C++ file 'pref.h'
+**
+** Created: Fri Sep 2 13:32:43 2005
+**      by: The Qt MOC ($Id: qt/moc_yacc.cpp   3.3.3   edited Aug 5 16:40 $)
+**
+** WARNING! All changes made in this file will be lost!
+*****************************************************************************/
+
+#undef QT_NO_COMPAT
+#include "../../src/pref.h"
+#include <qmetaobject.h>
+#include <qapplication.h>
+
+#include <private/qucomextra_p.h>
+#if !defined(Q_MOC_OUTPUT_REVISION) || (Q_MOC_OUTPUT_REVISION != 26)
+#error "This file was generated using the moc from 3.3.3. It"
+#error "cannot be used with the include files from this version of Qt."
+#error "(The moc has changed too much.)"
+#endif
+
+const char *KuirePreferences::className() const
+{
+    return "KuirePreferences";
+}
+
+QMetaObject *KuirePreferences::metaObj = 0;
+static QMetaObjectCleanUp cleanUp_KuirePreferences( "KuirePreferences", &KuirePreferences::staticMetaObject );
+
+#ifndef QT_NO_TRANSLATION
+QString KuirePreferences::tr( const char *s, const char *c )
+{
+    if ( qApp )
+	return qApp->translate( "KuirePreferences", s, c, QApplication::DefaultCodec );
+    else
+	return QString::fromLatin1( s );
+}
+#ifndef QT_NO_TRANSLATION_UTF8
+QString KuirePreferences::trUtf8( const char *s, const char *c )
+{
+    if ( qApp )
+	return qApp->translate( "KuirePreferences", s, c, QApplication::UnicodeUTF8 );
+    else
+	return QString::fromUtf8( s );
+}
+#endif // QT_NO_TRANSLATION_UTF8
+
+#endif // QT_NO_TRANSLATION
+
+QMetaObject* KuirePreferences::staticMetaObject()
+{
+    if ( metaObj )
+	return metaObj;
+    QMetaObject* parentObject = KDialogBase::staticMetaObject();
+    metaObj = QMetaObject::new_metaobject(
+	"KuirePreferences", parentObject,
+	0, 0,
+	0, 0,
+#ifndef QT_NO_PROPERTIES
+	0, 0,
+	0, 0,
+#endif // QT_NO_PROPERTIES
+	0, 0 );
+    cleanUp_KuirePreferences.setMetaObject( metaObj );
+    return metaObj;
+}
+
+void* KuirePreferences::qt_cast( const char* clname )
+{
+    if ( !qstrcmp( clname, "KuirePreferences" ) )
+	return this;
+    return KDialogBase::qt_cast( clname );
+}
+
+bool KuirePreferences::qt_invoke( int _id, QUObject* _o )
+{
+    return KDialogBase::qt_invoke(_id,_o);
+}
+
+bool KuirePreferences::qt_emit( int _id, QUObject* _o )
+{
+    return KDialogBase::qt_emit(_id,_o);
+}
+#ifndef QT_NO_PROPERTIES
+
+bool KuirePreferences::qt_property( int id, int f, QVariant* v)
+{
+    return KDialogBase::qt_property( id, f, v);
+}
+
+bool KuirePreferences::qt_static_property( QObject* , int , int , QVariant* ){ return FALSE; }
+#endif // QT_NO_PROPERTIES
+
+
+const char *KuirePrefPageOne::className() const
+{
+    return "KuirePrefPageOne";
+}
+
+QMetaObject *KuirePrefPageOne::metaObj = 0;
+static QMetaObjectCleanUp cleanUp_KuirePrefPageOne( "KuirePrefPageOne", &KuirePrefPageOne::staticMetaObject );
+
+#ifndef QT_NO_TRANSLATION
+QString KuirePrefPageOne::tr( const char *s, const char *c )
+{
+    if ( qApp )
+	return qApp->translate( "KuirePrefPageOne", s, c, QApplication::DefaultCodec );
+    else
+	return QString::fromLatin1( s );
+}
+#ifndef QT_NO_TRANSLATION_UTF8
+QString KuirePrefPageOne::trUtf8( const char *s, const char *c )
+{
+    if ( qApp )
+	return qApp->translate( "KuirePrefPageOne", s, c, QApplication::UnicodeUTF8 );
+    else
+	return QString::fromUtf8( s );
+}
+#endif // QT_NO_TRANSLATION_UTF8
+
+#endif // QT_NO_TRANSLATION
+
+QMetaObject* KuirePrefPageOne::staticMetaObject()
+{
+    if ( metaObj )
+	return metaObj;
+    QMetaObject* parentObject = QFrame::staticMetaObject();
+    metaObj = QMetaObject::new_metaobject(
+	"KuirePrefPageOne", parentObject,
+	0, 0,
+	0, 0,
+#ifndef QT_NO_PROPERTIES
+	0, 0,
+	0, 0,
+#endif // QT_NO_PROPERTIES
+	0, 0 );
+    cleanUp_KuirePrefPageOne.setMetaObject( metaObj );
+    return metaObj;
+}
+
+void* KuirePrefPageOne::qt_cast( const char* clname )
+{
+    if ( !qstrcmp( clname, "KuirePrefPageOne" ) )
+	return this;
+    return QFrame::qt_cast( clname );
+}
+
+bool KuirePrefPageOne::qt_invoke( int _id, QUObject* _o )
+{
+    return QFrame::qt_invoke(_id,_o);
+}
+
+bool KuirePrefPageOne::qt_emit( int _id, QUObject* _o )
+{
+    return QFrame::qt_emit(_id,_o);
+}
+#ifndef QT_NO_PROPERTIES
+
+bool KuirePrefPageOne::qt_property( int id, int f, QVariant* v)
+{
+    return QFrame::qt_property( id, f, v);
+}
+
+bool KuirePrefPageOne::qt_static_property( QObject* , int , int , QVariant* ){ return FALSE; }
+#endif // QT_NO_PROPERTIES
+
+
+const char *KuirePrefPageTwo::className() const
+{
+    return "KuirePrefPageTwo";
+}
+
+QMetaObject *KuirePrefPageTwo::metaObj = 0;
+static QMetaObjectCleanUp cleanUp_KuirePrefPageTwo( "KuirePrefPageTwo", &KuirePrefPageTwo::staticMetaObject );
+
+#ifndef QT_NO_TRANSLATION
+QString KuirePrefPageTwo::tr( const char *s, const char *c )
+{
+    if ( qApp )
+	return qApp->translate( "KuirePrefPageTwo", s, c, QApplication::DefaultCodec );
+    else
+	return QString::fromLatin1( s );
+}
+#ifndef QT_NO_TRANSLATION_UTF8
+QString KuirePrefPageTwo::trUtf8( const char *s, const char *c )
+{
+    if ( qApp )
+	return qApp->translate( "KuirePrefPageTwo", s, c, QApplication::UnicodeUTF8 );
+    else
+	return QString::fromUtf8( s );
+}
+#endif // QT_NO_TRANSLATION_UTF8
+
+#endif // QT_NO_TRANSLATION
+
+QMetaObject* KuirePrefPageTwo::staticMetaObject()
+{
+    if ( metaObj )
+	return metaObj;
+    QMetaObject* parentObject = QFrame::staticMetaObject();
+    metaObj = QMetaObject::new_metaobject(
+	"KuirePrefPageTwo", parentObject,
+	0, 0,
+	0, 0,
+#ifndef QT_NO_PROPERTIES
+	0, 0,
+	0, 0,
+#endif // QT_NO_PROPERTIES
+	0, 0 );
+    cleanUp_KuirePrefPageTwo.setMetaObject( metaObj );
+    return metaObj;
+}
+
+void* KuirePrefPageTwo::qt_cast( const char* clname )
+{
+    if ( !qstrcmp( clname, "KuirePrefPageTwo" ) )
+	return this;
+    return QFrame::qt_cast( clname );
+}
+
+bool KuirePrefPageTwo::qt_invoke( int _id, QUObject* _o )
+{
+    return QFrame::qt_invoke(_id,_o);
+}
+
+bool KuirePrefPageTwo::qt_emit( int _id, QUObject* _o )
+{
+    return QFrame::qt_emit(_id,_o);
+}
+#ifndef QT_NO_PROPERTIES
+
+bool KuirePrefPageTwo::qt_property( int id, int f, QVariant* v)
+{
+    return QFrame::qt_property( id, f, v);
+}
+
+bool KuirePrefPageTwo::qt_static_property( QObject* , int , int , QVariant* ){ return FALSE; }
+#endif // QT_NO_PROPERTIES
