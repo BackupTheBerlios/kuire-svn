@@ -17,29 +17,35 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include "editorsview.h"
 
-
-#include <kapplication.h>
-#include <dcopclient.h>
-#include <qdatastream.h>
-#include <qstring.h>
-
-int main(int argc, char **argv)
+editorsView::editorsView(KMdiChildView *child, KMdiMainFrm *parent)
+ : QTextEdit(child)
 {
-    KApplication app(argc, argv, "kuire_client", false);
+  // set statusbar shortcut
+  sbar = parent->statusBar();
+}
 
-    // get our DCOP client and attach so that we may use it
-    DCOPClient *client = app.dcopClient();
-    client->attach();
 
-    // do a 'send' for now
-    QByteArray data;
-    QDataStream ds(data, IO_WriteOnly);
-    if (argc > 1)
-        ds << QString(argv[1]);
-    else
-        ds << QString("http://www.kde.org");
-    client->send("kuire", "KuireIface", "openURL(QString)", data);
+editorsView::~editorsView()
+{
+}
 
-    return app.exec();
+/****************************** saveStations *******************************/
+
+void editorsView::saveText(QDomDocument* doc, QDomElement* data)
+{
+  QDomElement stn = doc->createElement( "text" );
+  QDomText content = doc->createTextNode( this->text() );
+  stn.appendChild( content );
+  data->appendChild( stn );
+}
+
+/****************************** openStations *******************************/
+
+void editorsView::loadText( QDomElement* data )
+{
+  QDomNode node = data->firstChild();
+  QDomElement stn = node.toElement();
+  this->setText(stn.text());
 }

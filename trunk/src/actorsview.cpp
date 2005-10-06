@@ -17,40 +17,17 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include "actorsview.h"
 
-
-#ifndef _KUIREPREF_H_
-#define _KUIREPREF_H_
-
-#include <kdialogbase.h>
-#include <qframe.h>
-
-class KuirePrefPageOne;
-class KuirePrefPageTwo;
-
-class KuirePreferences : public KDialogBase
+actorsView::actorsView(QWidget *parent, const char *name)
+ : QWidget(parent, name)
 {
-    Q_OBJECT
-public:
-    KuirePreferences();
+}
 
-private:
-    KuirePrefPageOne *m_pageOne;
-    KuirePrefPageTwo *m_pageTwo;
-};
 
-class KuirePrefPageOne : public QFrame
+actorsView::~actorsView()
 {
-    Q_OBJECT
-public:
-    KuirePrefPageOne(QWidget *parent = 0);
-};
+}
 
-class KuirePrefPageTwo : public QFrame
-{
-    Q_OBJECT
-public:
-    KuirePrefPageTwo(QWidget *parent = 0);
-};
 
-#endif // _KUIREPREF_H_
+#include "actorsview.moc"

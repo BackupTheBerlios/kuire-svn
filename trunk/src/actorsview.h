@@ -17,80 +17,22 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-
-
-#ifndef _KUIREVIEW_H_
-#define _KUIREVIEW_H_
+#ifndef ACTORSVIEW_H
+#define ACTORSVIEW_H
 
 #include <qwidget.h>
-#include <kparts/part.h>
-#include <kuireiface.h>
-
-class QPainter;
-class KURL;
 
 /**
- * This is the main view class for Kuire.  Most of the non-menu,
- * non-toolbar, and non-statusbar (e.g., non frame) GUI code should go
- * here.
- *
- * This kuire uses an HTML component as an example.
- *
- * @short Main view
- * @author Carsten Nikiel <carsten@nikiel.de>
- * @version 0.1
- */
-class KuireView : public QWidget, public KuireIface
+@author Carsten Nikiel
+*/
+class actorsView : public QWidget
 {
-    Q_OBJECT
+Q_OBJECT
 public:
-	/**
-	 * Default constructor
-	 */
-    KuireView(QWidget *parent);
+    actorsView(QWidget *parent = 0, const char *name = 0);
 
-	/**
-	 * Destructor
-	 */
-    virtual ~KuireView();
+    ~actorsView();
 
-    /**
-     * Random 'get' function
-     */
-    QString currentURL();
-
-    /**
-     * Random 'set' function accessed by DCOP
-     */
-    virtual void openURL(QString url);
-
-    /**
-     * Random 'set' function
-     */
-    virtual void openURL(const KURL& url);
-
-    /**
-     * Print this view to any medium -- paper or not
-     */
-    void print(QPainter *, int height, int width);
-
-signals:
-    /**
-     * Use this signal to change the content of the statusbar
-     */
-    void signalChangeStatusbar(const QString& text);
-
-    /**
-     * Use this signal to change the content of the caption
-     */
-    void signalChangeCaption(const QString& text);
-
-private slots:
-    void slotOnURL(const QString& url);
-    void slotSetTitle(const QString& title);
-
-private:
-    KParts::ReadOnlyPart *m_html;
 };
 
-#endif // _KUIREVIEW_H_
+#endif

@@ -17,45 +17,29 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef EDITORSVIEW_H
+#define EDITORSVIEW_H
 
+#include <qtextedit.h>
+#include <kmdimainfrm.h>
+#include <kstatusbar.h>
 
-#include "pref.h"
-
-#include <klocale.h>
-
-#include <qlayout.h>
-#include <qlabel.h>
-
-KuirePreferences::KuirePreferences()
-    : KDialogBase(TreeList, i18n("Kuire Preferences"),
-                  Help|Default|Ok|Apply|Cancel, Ok)
+/**
+@author Carsten Nikiel
+*/
+class editorsView : public QTextEdit
 {
-    // this is the base class for your preferences dialog.  it is now
-    // a Treelist dialog.. but there are a number of other
-    // possibilities (including Tab, Swallow, and just Plain)
-    QFrame *frame;
-    frame = addPage(i18n("First Page"), i18n("Page One Options"));
-    m_pageOne = new KuirePrefPageOne(frame);
+public:
+    editorsView(KMdiChildView *child, KMdiMainFrm *parent);
 
-    frame = addPage(i18n("Second Page"), i18n("Page Two Options"));
-    m_pageTwo = new KuirePrefPageTwo(frame);
-}
+    ~editorsView();
 
-KuirePrefPageOne::KuirePrefPageOne(QWidget *parent)
-    : QFrame(parent)
-{
-    QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setAutoAdd(true);
+    void saveText( QDomDocument*, QDomElement* );    // save Text to XML document
+    void loadText( QDomElement* );                   // create Text from XML
 
-    new QLabel(i18n("Add something here"), this);
-}
+private:
+  KStatusBar*          sbar;                       // shortcut to Kuires statusbar
 
-KuirePrefPageTwo::KuirePrefPageTwo(QWidget *parent)
-    : QFrame(parent)
-{
-    QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setAutoAdd(true);
+};
 
-    new QLabel(i18n("Add something here"), this);
-}
-#include "pref.moc"
+#endif

@@ -20,255 +20,142 @@
 
 
 #include "kuire.h"
-#include "pref.h"
 
-#include <qdragobject.h>
-#include <kprinter.h>
-#include <qpainter.h>
-#include <qpaintdevicemetrics.h>
-
-#include <kglobal.h>
+#include <kmdimainfrm.h>
 #include <klocale.h>
-#include <kiconloader.h>
-#include <kdeversion.h>
 #include <kstatusbar.h>
-#include <kaccel.h>
-#include <kio/netaccess.h>
+#include <kpopupmenu.h>
+#include <kmenubar.h>
 #include <kfiledialog.h>
-#include <kconfig.h>
-#include <kurl.h>
-#include <kurldrag.h>
-#include <kurlrequesterdlg.h>
+#include <kuser.h>
+#include <qdom.h>
+#include <qdatetime.h>
 
-#include <kstdaccel.h>
-#include <kaction.h>
-#include <kstdaction.h>
-
-Kuire::Kuire()
-    : KMdiMainFrm( 0, "Kuire", KMdi::IDEAlMode ),
-      m_view(new KuireView(this)),
-      m_printer(0)
+kuire::kuire()
+    : KMdiMainFrm( 0, "Kuire", KMdi::IDEAlMode )
 {
-    // accept dnd
-    setAcceptDrops(true);
+    KPopupMenu *menuFile = new KPopupMenu( this );
+    KPopupMenu *menuEdit = new KPopupMenu( this );
 
-    // tell the KMainWindow that this is indeed the main widget
-    setCentralWidget(m_view);
+    // add drop-down menus to main menu bar
+    menuBar()->insertItem( "&File", menuFile );
+    menuBar()->insertItem( "&Edit", menuEdit );
+    menuBar()->insertItem( "&Help", helpMenu() );
 
-    // then, setup our actions
-    setupActions();
+    setToolviewStyle(3);
 
-    // and a status bar
-    statusBar()->show();
+    // set the shell's ui resource file
+    // setXMLFile("kuireui.rc");
+    KMdiChildView *mainView = new KMdiChildView( i18n( "Mainview" ), this );
+    ( new QHBoxLayout( mainView ) )->setAutoAdd( true );
+    texteditor = new editorsView( mainView, this );
+    texteditor->setTextFormat ( Qt::PlainText );
+    addWindow( mainView );
 
-    // Apply the create the main window and ask the mainwindow to
-		// automatically save settings if changed: window size, toolbar
-    // position, icon size, etc.  Also to add actions for the statusbar
-		// toolbar, and keybindings if necessary.
-    setupGUI();
+    actors = new actorsView(this, "Actors");
+    actors->setCaption( i18n( "Actors" ) );
+    addToolWindow( actors, KDockWidget::DockRight, getMainDockWidget() );
 
-    // allow the view to change the statusbar and caption
-    connect(m_view, SIGNAL(signalChangeStatusbar(const QString&)),
-            this,   SLOT(changeStatusbar(const QString&)));
-    connect(m_view, SIGNAL(signalChangeCaption(const QString&)),
-            this,   SLOT(changeCaption(const QString&)));
+    // Create another tool box
+    QLabel *events = new QLabel( i18n( "Yet to implement, sorry!" ), this, "Events" );
+    events->setCaption( i18n( "Events" ) );
+    addToolWindow( events, KDockWidget::DockBottom, getMainDockWidget() );
 
-   actorsToolBox = new KListBox( this , "Actors");
-   actorsToolBox->setCaption( i18n ("Actors") );
-   addToolWindow( actorsToolBox, KDockWidget::DockRight, getMainDockWidget() );
+    // Create another tool box
+    QLabel *locations = new QLabel( i18n( "Yet to implement, sorry!" ), this, "Locations" );
+    locations->setCaption( i18n( "Locations" ) );
+    addToolWindow( locations, KDockWidget::DockBottom, getMainDockWidget() );
 
-   chaptersToolBox = new KListBox( this , "Chapters");
-   chaptersToolBox->setCaption( i18n ("Chapters") );
-   addToolWindow( chaptersToolBox, KDockWidget::DockRight, getMainDockWidget() );
+    statusBar()->message("Kuire has started.");  
+
+    KAction *actionSave = KStdAction::save(this, SLOT(fileSave()), 0);
+    KAction *actionOpen = KStdAction::open(this, SLOT(fileOpen()), 0);
+
+    // add actions to File menu
+    actionOpen->plug( menuFile );
+    actionSave->plug( menuFile );
 
 }
 
-Kuire::~Kuire()
+kuire::~kuire()
 {
 }
 
-void Kuire::load(const KURL& url)
+/******************************** fileSave *********************************/
+
+bool kuire::fileSave()
 {
-    QString target;
-    // the below code is what you should normally do.  in this
-    // example case, we want the url to our own.  you probably
-    // want to use this code instead for your app
+  // get user to select filename and location
+  QString fileName = KFileDialog::getSaveFileName();
+  if (fileName.isEmpty()) return false;
 
-    #if 0
-    // download the contents
-    if (KIO::NetAccess::download(url, target))
-    {
-        // set our caption
-        setCaption(url);
+  // start the XML document
+  QDomDocument doc( "Kuire" );
 
-        // load in the file (target is always local)
-        loadFile(target);
+  // create the main data element and station elements
+  QDomElement data = doc.createElement( "chapter" );
+  KUser user(KUser::UseRealUserID);
+  data.setAttribute( "savedBy", user.loginName() );
+  data.setAttribute( "savedAt", QDateTime::currentDateTime().toString(Qt::LocalDate) );
+  doc.appendChild( data );
+  texteditor->saveText( &doc, &data );
 
-        // and remove the temp file
-        KIO::NetAccess::removeTempFile(target);
-    }
-    #endif
+  // open the file and check we can write to it
+  QFile file(fileName);
+  if (!file.open(IO_WriteOnly))
+  {
+    statusBar()->message(QString("Failed to save '%1'").arg(fileName));
+    return false;
+  }
 
-    setCaption(url.prettyURL());
-    m_view->openURL(url);
+  // output the XML document as a text stream to the file
+  QTextStream ts(&file);
+  ts << doc.toString();
+  file.close();
+  statusBar()->message(QString("Saved to '%1'").arg(fileName));
+  return true;
 }
 
-void Kuire::setupActions()
+
+/******************************** fileOpen **********************************/
+
+bool kuire::fileOpen()
 {
-    KStdAction::openNew(this, SLOT(fileNew()), actionCollection());
-    KStdAction::open(this, SLOT(fileOpen()), actionCollection());
-    KStdAction::save(this, SLOT(fileSave()), actionCollection());
-    KStdAction::saveAs(this, SLOT(fileSaveAs()), actionCollection());
-    KStdAction::print(this, SLOT(filePrint()), actionCollection());
-    KStdAction::quit(kapp, SLOT(quit()), actionCollection());
+  // get user to select filename and location
+  QString fileName = KFileDialog::getOpenFileName();
+  if (fileName.isEmpty()) return false;
 
-    KStdAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
+  // create an empty XML document
+  QDomDocument doc( "Kuire" );
 
-    // this doesn't do anything useful.  it's just here to illustrate
-    // how to insert a custom menu and menu item
-    KAction *custom = new KAction(i18n("Cus&tom Menuitem"), 0,
-                                  this, SLOT(optionsPreferences()),
-                                  actionCollection(), "custom_action");
-}
+  // open the file and check we can read from it
+  QFile file(fileName);
+  if (!file.open(IO_ReadOnly))
+  {
+    statusBar()->message(QString("Failed to open '%1'").arg(fileName));
+    return false;
+  }
 
-void Kuire::saveProperties(KConfig *config)
-{
-    // the 'config' object points to the session managed
-    // config file.  anything you write here will be available
-    // later when this app is restored
+  // read the XML document from the file
+  if (!doc.setContent(&file))
+  {
+    file.close();
+    statusBar()->message(QString("Failed to read '%1'").arg(fileName));
+    return false;
+  }
+  file.close();
 
-    if (!m_view->currentURL().isEmpty()) {
-#if KDE_IS_VERSION(3,1,3)
-        config->writePathEntry("lastURL", m_view->currentURL());
-#else
-        config->writeEntry("lastURL", m_view->currentURL());
-#endif
-    }
-}
+  // check the document type is correct
+  if (doc.doctype().name() != "Kuire")
+  {
+    statusBar()->message(QString("Invalid '%1'").arg(fileName));
+    return false;
+  }
 
-void Kuire::readProperties(KConfig *config)
-{
-    // the 'config' object points to the session managed
-    // config file.  this function is automatically called whenever
-    // the app is being restored.  read in here whatever you wrote
-    // in 'saveProperties'
-
-    QString url = config->readPathEntry("lastURL");
-
-    if (!url.isEmpty())
-        m_view->openURL(KURL(url));
-}
-
-void Kuire::dragEnterEvent(QDragEnterEvent *event)
-{
-    // accept uri drops only
-    event->accept(KURLDrag::canDecode(event));
-}
-
-void Kuire::dropEvent(QDropEvent *event)
-{
-    // this is a very simplistic implementation of a drop event.  we
-    // will only accept a dropped URL.  the Qt dnd code can do *much*
-    // much more, so please read the docs there
-    KURL::List urls;
-
-    // see if we can decode a URI.. if not, just ignore it
-    if (KURLDrag::decode(event, urls) && !urls.isEmpty())
-    {
-        // okay, we have a URI.. process it
-        const KURL &url = urls.first();
-
-        // load in the file
-        load(url);
-    }
-}
-
-void Kuire::fileNew()
-{
-    // this slot is called whenever the File->New menu is selected,
-    // the New shortcut is pressed (usually CTRL+N) or the New toolbar
-    // button is clicked
-
-    // create a new window
-    (new Kuire)->show();
-}
-
-void Kuire::fileOpen()
-{
-    // this slot is called whenever the File->Open menu is selected,
-    // the Open shortcut is pressed (usually CTRL+O) or the Open toolbar
-    // button is clicked
-/*
-    // this brings up the generic open dialog
-    KURL url = KURLRequesterDlg::getURL(QString::null, this, i18n("Open Location") );
-*/
-    // standard filedialog
-    KURL url = KFileDialog::getOpenURL(QString::null, QString::null, this, i18n("Open Location"));
-    if (!url.isEmpty())
-        m_view->openURL(url);
-}
-
-void Kuire::fileSave()
-{
-    // this slot is called whenever the File->Save menu is selected,
-    // the Save shortcut is pressed (usually CTRL+S) or the Save toolbar
-    // button is clicked
-
-    // save the current file
-}
-
-void Kuire::fileSaveAs()
-{
-    // this slot is called whenever the File->Save As menu is selected,
-    KURL file_url = KFileDialog::getSaveURL();
-    if (!file_url.isEmpty() && file_url.isValid())
-    {
-        // save your info, here
-    }
-}
-
-void Kuire::filePrint()
-{
-    // this slot is called whenever the File->Print menu is selected,
-    // the Print shortcut is pressed (usually CTRL+P) or the Print toolbar
-    // button is clicked
-    if (!m_printer) m_printer = new KPrinter;
-    if (m_printer->setup(this))
-    {
-        // setup the printer.  with Qt, you always "print" to a
-        // QPainter.. whether the output medium is a pixmap, a screen,
-        // or paper
-        QPainter p;
-        p.begin(m_printer);
-
-        // we let our view do the actual printing
-        QPaintDeviceMetrics metrics(m_printer);
-        m_view->print(&p, metrics.height(), metrics.width());
-
-        // and send the result to the printer
-        p.end();
-    }
-}
-
-void Kuire::optionsPreferences()
-{
-    // popup some sort of preference dialog, here
-    KuirePreferences dlg;
-    if (dlg.exec())
-    {
-        // redo your settings
-    }
-}
-
-void Kuire::changeStatusbar(const QString& text)
-{
-    // display the text on the statusbar
-    statusBar()->message(text);
-}
-
-void Kuire::changeCaption(const QString& text)
-{
-    // display the text on the caption
-    setCaption(text);
+  // read the XML elements to create the stations
+  QDomElement data = doc.documentElement();
+  texteditor->loadText( &data );
+  statusBar()->message(QString("Loaded '%1'").arg(fileName));
+  return true;
 }
 #include "kuire.moc"

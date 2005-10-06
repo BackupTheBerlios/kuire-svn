@@ -21,7 +21,6 @@
 
 #include "kuire.h"
 #include <kapplication.h>
-#include <dcopclient.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>
@@ -33,48 +32,39 @@ static const char version[] = "0.1";
 
 static KCmdLineOptions options[] =
 {
-    { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
+//    { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
     KCmdLineLastOption
 };
 
 int main(int argc, char **argv)
 {
-    KAboutData about("kuire", I18N_NOOP("Kuire"), version, description,
-                     KAboutData::License_GPL, "(C) 2005 Carsten Nikiel", 0, 0, "carsten@nikiel.de");
+    KAboutData about("Kuire", I18N_NOOP("Kuire"), version, description,
+		     KAboutData::License_GPL, "(C) 2005 Carsten Nikiel", 0, 0, "carsten@nikiel.de");
     about.addAuthor( "Carsten Nikiel", 0, "carsten@nikiel.de" );
     KCmdLineArgs::init(argc, argv, &about);
-    KCmdLineArgs::addCmdLineOptions(options);
+    KCmdLineArgs::addCmdLineOptions( options );
     KApplication app;
+    kuire *mainWin = 0;
 
-    // register ourselves as a dcop client
-    app.dcopClient()->registerAs(app.name(), false);
-
-    // see if we are starting with session management
     if (app.isRestored())
     {
-        RESTORE(Kuire);
+        RESTORE(kuire);
     }
     else
     {
         // no session.. just start up normally
         KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-        if (args->count() == 0)
-        {
-            Kuire *widget = new Kuire;
-            widget->show();
-        }
-        else
-        {
-            int i = 0;
-            for (; i < args->count(); i++)
-            {
-                Kuire *widget = new Kuire;
-                widget->show();
-                widget->load(args->url(i));
-            }
-        }
+
+        /// @todo do something with the command line args here
+
+        mainWin = new kuire();
+        app.setMainWidget( mainWin );
+        mainWin->show();
+
         args->clear();
     }
 
+    // mainWin has WDestructiveClose flag by default, so it will delete itself.
     return app.exec();
 }
+

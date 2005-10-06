@@ -26,87 +26,37 @@
 #include <config.h>
 #endif
 
-#include <kapplication.h>
 #include <kmdimainfrm.h>
-#include <klistbox.h>
-
-#include "kuireview.h"
-
-class KPrinter;
-class KURL;
+#include <editorsview.h>
+#include <actorsview.h>
 
 /**
- * This class serves as the main window for Kuire.  It handles the
- * menus, toolbars, and status bars.
- *
- * @short Main window class
+ * @short Application Main Window
  * @author Carsten Nikiel <carsten@nikiel.de>
  * @version 0.1
  */
-class Kuire : public KMdiMainFrm
+class kuire : public KMdiMainFrm
 {
     Q_OBJECT
 public:
     /**
      * Default Constructor
      */
-    Kuire();
+    kuire();
 
     /**
      * Default Destructor
      */
-    virtual ~Kuire();
+    virtual ~kuire();
 
-    /**
-     * Use this method to load whatever file/URL you have
-     */
-    void load(const KURL& url);
-
-protected:
-    /**
-     * Overridden virtuals for Qt drag 'n drop (XDND)
-     */
-    virtual void dragEnterEvent(QDragEnterEvent *event);
-    virtual void dropEvent(QDropEvent *event);
-
-protected:
-    /**
-     * This function is called when it is time for the app to save its
-     * properties for session management purposes.
-     */
-    void saveProperties(KConfig *);
-
-    /**
-     * This function is called when this app is restored.  The KConfig
-     * object points to the session management config file that was saved
-     * with @ref saveProperties
-     */
-    void readProperties(KConfig *);
-
-
-    KListBox *actorsToolBox;
-    KListBox *chaptersToolBox;
-
-private slots:
-    void fileNew();
-    void fileOpen();
-    void fileSave();
-    void fileSaveAs();
-    void filePrint();
-    void optionsPreferences();
-
-    void changeStatusbar(const QString& text);
-    void changeCaption(const QString& text);
+public slots:
+    bool fileSave();                             // save current file
+    bool fileOpen();                             // open previously saved file
 
 private:
-    void setupAccel();
-    void setupActions();
+  editorsView *texteditor;
+  actorsView *actors;
 
-private:
-    KuireView *m_view;
-
-    KPrinter   *m_printer;
 };
 
 #endif // _KUIRE_H_
-
