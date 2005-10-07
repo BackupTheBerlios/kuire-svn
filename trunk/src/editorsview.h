@@ -20,14 +20,16 @@
 #ifndef EDITORSVIEW_H
 #define EDITORSVIEW_H
 
-#include <qtextedit.h>
+#include <chaptereditor.h>
 #include <kmdimainfrm.h>
 #include <kstatusbar.h>
+#include <qwidgetstack.h>
+#include <qvaluelist.h>
 
 /**
 @author Carsten Nikiel
 */
-class editorsView : public QTextEdit
+class editorsView : public QWidgetStack
 {
 public:
     editorsView(KMdiChildView *child, KMdiMainFrm *parent);
@@ -36,10 +38,14 @@ public:
 
     void saveText( QDomDocument*, QDomElement* );    // save Text to XML document
     void loadText( QDomElement* );                   // create Text from XML
+    bool nextChapter();
+    bool prevChapter();
+    bool addChapter();
+    bool delChapter();
 
 private:
-  KStatusBar*          sbar;                       // shortcut to Kuires statusbar
-
+  KStatusBar* sbar;                       // shortcut to Kuires statusbar
+  QValueList<int> chapterList;
 };
 
 #endif

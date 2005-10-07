@@ -31,15 +31,18 @@
 #include <qdom.h>
 #include <qdatetime.h>
 
+
 kuire::kuire()
     : KMdiMainFrm( 0, "Kuire", KMdi::IDEAlMode )
 {
     KPopupMenu *menuFile = new KPopupMenu( this );
     KPopupMenu *menuEdit = new KPopupMenu( this );
+    KPopupMenu *menuChapter = new KPopupMenu( this );
 
     // add drop-down menus to main menu bar
     menuBar()->insertItem( "&File", menuFile );
     menuBar()->insertItem( "&Edit", menuEdit );
+    menuBar()->insertItem( "&Chapter", menuChapter );
     menuBar()->insertItem( "&Help", helpMenu() );
 
     setToolviewStyle(3);
@@ -49,7 +52,6 @@ kuire::kuire()
     KMdiChildView *mainView = new KMdiChildView( i18n( "Mainview" ), this );
     ( new QHBoxLayout( mainView ) )->setAutoAdd( true );
     texteditor = new editorsView( mainView, this );
-    texteditor->setTextFormat ( Qt::PlainText );
     addWindow( mainView );
 
     actors = new actorsView(this, "Actors");
@@ -71,9 +73,19 @@ kuire::kuire()
     KAction *actionSave = KStdAction::save(this, SLOT(fileSave()), 0);
     KAction *actionOpen = KStdAction::open(this, SLOT(fileOpen()), 0);
 
+    KAction *actionAddChapter  = new KAction( "&Add", ALT+Key_A, this, SLOT(addChapter()), this, "addChapter");
+    KAction *actionDelChapter  = new KAction( "&Del", ALT+Key_D, this, SLOT(delChapter()), this, "delChapter");
+    KAction *actionNextChapter  = new KAction( "Next", ALT+Key_Right, this, SLOT(nextChapter()), this, "nextChapter");
+    KAction *actionPrevChapter  = new KAction( "Prev", ALT+Key_Left, this, SLOT(prevChapter()), this, "prevChapter");
+
     // add actions to File menu
     actionOpen->plug( menuFile );
     actionSave->plug( menuFile );
+
+    actionAddChapter->plug( menuChapter );
+    actionDelChapter->plug( menuChapter );
+    actionNextChapter->plug( menuChapter );
+    actionPrevChapter->plug( menuChapter );
 
 }
 
@@ -93,10 +105,7 @@ bool kuire::fileSave()
   QDomDocument doc( "Kuire" );
 
   // create the main data element and station elements
-  QDomElement data = doc.createElement( "chapter" );
-  KUser user(KUser::UseRealUserID);
-  data.setAttribute( "savedBy", user.loginName() );
-  data.setAttribute( "savedAt", QDateTime::currentDateTime().toString(Qt::LocalDate) );
+  QDomElement data = doc.createElement( "book" );
   doc.appendChild( data );
   texteditor->saveText( &doc, &data );
 
@@ -158,4 +167,26 @@ bool kuire::fileOpen()
   statusBar()->message(QString("Loaded '%1'").arg(fileName));
   return true;
 }
+
+bool kuire::nextChapter()
+{
+  return texteditor->nextChapter();
+}
+
+bool kuire::prevChapter()
+{
+  return texteditor->prevChapter();
+}
+
+
+bool kuire::addChapter()
+{
+  return texteditor->addChapter();
+}
+
+bool kuire::delChapter()
+{
+  return texteditor->delChapter();
+}
+
 #include "kuire.moc"

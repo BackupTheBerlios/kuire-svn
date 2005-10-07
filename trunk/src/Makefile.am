@@ -2,7 +2,7 @@
 INCLUDES = $(all_includes)
 
 # these are the headers for your project
-noinst_HEADERS = kuire.h actorsview.h editorsview.h
+noinst_HEADERS = kuire.h actorsview.h editorsview.h chaptereditor.h
 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
@@ -21,7 +21,8 @@ KDE_ICON = AUTO
 bin_PROGRAMS = kuire
 
 # the application source, library search path, and link libraries
-kuire_SOURCES = main.cpp kuire.cpp actorsview.cpp editorsview.cpp
+kuire_SOURCES = main.cpp kuire.cpp actorsview.cpp editorsview.cpp \
+	chaptereditor.cpp
 kuire_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 kuire_LDADD = $(LIB_KIO) -lkmdi $(LIB_KDEUI)
 

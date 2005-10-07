@@ -27,6 +27,7 @@
 #endif
 
 #include <kmdimainfrm.h>
+
 #include <editorsview.h>
 #include <actorsview.h>
 
@@ -52,10 +53,14 @@ public:
 public slots:
     bool fileSave();                             // save current file
     bool fileOpen();                             // open previously saved file
+    bool nextChapter();                          // go to the next Chapter
+    bool prevChapter();                          // go to the previous Chapter
+    bool addChapter();                          // add a new Chapter
+    bool delChapter();                          // delete active Chapter
 
 private:
-  editorsView *texteditor;
-  actorsView *actors;
+  editorsView* texteditor;
+  actorsView* actors;
 
 };
 
